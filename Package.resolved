@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Prelude",
+        "repositoryURL": "/Users/justinguedes/Library/Mobile Documents/com~apple~CloudDocs/Programming/Swift/Prelude",
+        "state": {
+          "branch": "master",
+          "revision": "02364574eeca159fe21f797f56edd8d877dcfb7a",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
