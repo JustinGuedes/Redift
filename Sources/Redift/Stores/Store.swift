@@ -7,9 +7,9 @@
 
 public class Store<State, Action> {
     
-    private let reducer: Reducer<State, Action>
-    private var subscribers: [AnySubscriber<State>]
-    private var state: State {
+    let reducer: Reducer<State, Action>
+    var subscribers: [AnySubscriber<State>]
+    var state: State {
         didSet {
             subscribers.forEach {
                 $0.newState(self.state)
@@ -61,13 +61,6 @@ public class Store<State, Action> {
     
     public func dispatch(_ action: Action) {
         dispatchFunction(action)
-    }
-    
-    public func dispatchActionCreator(_ actionCreator: ActionCreator<State, Action>) {
-        let store = SubStore(dispatchFunction: dispatch, autoclosureState: self.state)
-        if let action = actionCreator.execute(store) {
-            dispatch(action)
-        }
     }
     
 }

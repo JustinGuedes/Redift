@@ -33,3 +33,17 @@ public extension SpecificSubscriber where ParentAction == Action {
     }
     
 }
+
+public extension SpecificSubscriber where Action: Redift.Action {
+
+    typealias ParentAction = Redift.Action
+
+}
+
+public extension SpecificSubscriber where ParentAction == Redift.Action, Action: Redift.Action {
+    
+    var actionType: Prism<ParentAction, Action> {
+        return Prism.identity
+    }
+    
+}

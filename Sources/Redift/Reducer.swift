@@ -27,7 +27,7 @@ extension Reducer: Monoid {
     }
     
     public static var empty: Reducer<State, Action> {
-        return Reducer { state, _ in }
+        return Reducer { _, _ in }
     }
     
 }

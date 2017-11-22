@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Prelude
 
 public struct ActionCreator<State, Action> {
     
@@ -33,6 +34,34 @@ public extension ActionCreator {
             
             return action
         }
+    }
+    
+}
+
+public extension Store {
+    
+    func dispatchActionCreator(_ actionCreator: ActionCreator<State, Action>) {
+        let store = SubStore(dispatchFunction: dispatch, autoclosureState: self.state)
+        if let action = actionCreator.execute(store) {
+            dispatch(action)
+        }
+    }
+    
+}
+
+public extension SpecificStore {
+    
+    func dispatch(_ actionCreator: ActionCreator<State, Action>) {
+        let parentActionCreator = ActionCreator<ParentState, ParentAction> { parentStore in
+            let childStore = SubStore(dispatchFunction: parentStore.dispatch <<< self.prism.createFrom, autoclosureState: self.lens.get(parentStore.state))
+            guard let childAction = actionCreator.execute(childStore) else {
+                return .none
+            }
+            
+            return self.prism.createFrom(childAction)
+        }
+        
+        parentStore.dispatchActionCreator(parentActionCreator)
     }
     
 }

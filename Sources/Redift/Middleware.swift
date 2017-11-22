@@ -17,6 +17,27 @@ public struct Middleware<State, Action> {
     
 }
 
+extension Middleware: Monoid {
+    
+    public static func <> (lhs: Middleware, rhs: Middleware) -> Middleware {
+        return Middleware { store, nextDispatch in
+            return { action in
+                lhs.execute(store, nextDispatch)(action)
+                rhs.execute(store, nextDispatch)(action)
+            }
+        }
+    }
+    
+    public static var empty: Middleware<State, Action> {
+        return Middleware { _, nextDispatch in
+            return { action in
+                nextDispatch(action)
+            }
+        }
+    }
+    
+}
+
 public extension Middleware {
     
     func lift<ParentState>(state lens: Lens<ParentState, State>) -> Middleware<ParentState, Action> {
