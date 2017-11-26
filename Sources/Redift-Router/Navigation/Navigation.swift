@@ -6,6 +6,7 @@
 //
 
 import Prelude
+import Redift
 
 public protocol HasNavigationState {
     
@@ -21,11 +22,11 @@ public protocol HasNavigationAction {
 
 public extension Store where State: HasNavigationState, Action: HasNavigationAction {
     
-    convenience init(withNavigation reducer: Reducer<State, Action>, initialState: State, middlewares: [Middleware<State, Action>]) {
+    convenience init<T>(reducer: Reducer<State, Action>, initialState: State, router: Router<T>, middlewares: [Middleware<State, Action>] = []) {
         let newReducer = reducer <> navigationReducer.lift(state: State.navigationLens,
                                                            action: Action.navigationPrism)
-        let newMiddlewares = middlewares + [navigationMiddleware.lift(state: State.navigationLens,
-                                                                      action: Action.navigationPrism)]
+        let newMiddlewares = middlewares <> [navigationMiddleware(router).lift(state: State.navigationLens,
+                                                                               action: Action.navigationPrism)]
         self.init(reducer: newReducer, initialState: initialState, middlewares: newMiddlewares)
     }
     

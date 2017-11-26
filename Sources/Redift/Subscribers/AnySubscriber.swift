@@ -60,14 +60,14 @@ extension AnySubscriber {
     
     private static func getState<S: SpecificSubscriber, State>(fromSubscriber subscriber: S) -> (State) -> Any? where State == S.ParentState {
         return { state in
-            subscriber.stateLens.get(state)
+            subscriber.stateType.get(state)
         }
     }
     
     private static func getState<S: SpecificSubscriber, State>(fromSubscriber subscriber: S) -> (State) -> Any? where State == S.ParentState, S: AnyObject {
         weak var subscriber = subscriber
         return { state in
-            subscriber?.stateLens.get(state)
+            subscriber?.stateType.get(state)
         }
     }
     

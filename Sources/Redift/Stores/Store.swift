@@ -19,14 +19,7 @@ public class Store<State, Action> {
     
     private var dispatchFunction: ((Action) -> Void)!
     
-    public init(reducer: Reducer<State, Action>, initialState: State) {
-        self.reducer = reducer
-        self.subscribers = []
-        self.state = initialState
-        self.dispatchFunction = self._dispatch
-    }
-    
-    public init(reducer: Reducer<State, Action>, initialState: State, middlewares: [Middleware<State, Action>]) {
+    public init(reducer: Reducer<State, Action>, initialState: State, middlewares: [Middleware<State, Action>] = []) {
         self.reducer = reducer
         self.subscribers = []
         self.state = initialState
@@ -36,14 +29,32 @@ public class Store<State, Action> {
         }
     }
     
-    public func subscribe<S: SpecificSubscriber, SubState>(_ subscriber: S) where State == S.ParentState, SubState == S.State {
+    public func subscribe<S: Subscriber>(_ subscriber: S) where State == S.State {
+        cleanSubscribers()
+        let anySubscriber = AnySubscriber(subscriber)
+        subscribers.append(anySubscriber)
+        anySubscriber.newState(state)
+    }
+    
+    public func subscribe<S: Subscriber>(_ subscriber: S) where State == S.State, S: AnyObject {
+        cleanSubscribers()
+        if let _ = subscribers.first(where: { $0.isEqual(toSubscriber: subscriber) }) {
+            return
+        }
+        
+        let anySubscriber = AnySubscriber(subscriber)
+        subscribers.append(anySubscriber)
+        anySubscriber.newState(state)
+    }
+    
+    func subscribe<S: SpecificSubscriber, SubState>(_ subscriber: S) where State == S.ParentState, SubState == S.State {
         cleanSubscribers()
         let anySubscriber = AnySubscriber(specific: subscriber)
         subscribers.append(anySubscriber)
         anySubscriber.newState(state)
     }
     
-    public func subscribe<S: SpecificSubscriber, SubState>(_ subscriber: S) where State == S.ParentState, SubState == S.State, S: AnyObject {
+    func subscribe<S: SpecificSubscriber, SubState>(_ subscriber: S) where State == S.ParentState, SubState == S.State, S: AnyObject {
         cleanSubscribers()
         if let _ = subscribers.first(where: { $0.isEqual(toSubscriber: subscriber) }) {
             return
@@ -54,7 +65,12 @@ public class Store<State, Action> {
         anySubscriber.newState(state)
     }
     
-    public func unsubscribe<S: SpecificSubscriber, SubState>(_ subscriber: S) where State == S.ParentState, SubState == S.State, S: AnyObject {
+    public func unsubscribe<S: Subscriber>(_ subscriber: S) where State == S.State, S: AnyObject {
+        guard let index = subscribers.index(where: { $0.isEqual(toSubscriber: subscriber) }) else { return }
+        subscribers.remove(at: index)
+    }
+    
+    func unsubscribe<S: SpecificSubscriber, SubState>(_ subscriber: S) where State == S.ParentState, SubState == S.State, S: AnyObject {
         guard let index = subscribers.index(where: { $0.isEqual(toSubscriber: subscriber) }) else { return }
         subscribers.remove(at: index)
     }

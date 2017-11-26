@@ -9,11 +9,11 @@ import Prelude
 
 public class SpecificStore<ParentState, State, ParentAction, Action> {
     
-    let parentStore: Store<ParentState, ParentAction>
     let lens: Lens<ParentState, State>
     let prism: Prism<ParentAction, Action>
+    public let parentStore: Store<ParentState, ParentAction>
     
-    init(lens: Lens<ParentState, State>, prism: Prism<ParentAction, Action>, parentStore: Store<ParentState, ParentAction>) {
+    public init(lens: Lens<ParentState, State>, prism: Prism<ParentAction, Action>, parentStore: Store<ParentState, ParentAction>) {
         self.lens = lens
         self.prism = prism
         self.parentStore = parentStore

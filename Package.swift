@@ -10,6 +10,9 @@ let package = Package(
         .library(
             name: "Redift",
             targets: ["Redift"]),
+	.library(
+            name: "Redift-Router",
+            targets: ["Redift"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.

@@ -7,6 +7,6 @@
 
 public struct NavigationState: Codable {
     
-    
+    public init() {}
     
 }

@@ -7,7 +7,7 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = 'Redift'
+  s.name             = 'Redift-Router'
   s.version          = '0.1.0'
   s.summary          = 'A short description of Redift.'
 
@@ -31,6 +31,7 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '8.0'
 
   s.dependency 'Prelude'
-  s.source_files = 'Sources/Redift/**/*'
+  s.dependency 'Redift'
+  s.source_files = 'Sources/Redift-Router/**/*'
   
 end
