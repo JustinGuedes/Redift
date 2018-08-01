@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "Prelude",
-        "repositoryURL": "/Users/justinguedes/Library/Mobile Documents/com~apple~CloudDocs/Programming/Swift/Prelude",
+        "repositoryURL": "https://github.com/JustinGuedes/Prelude",
         "state": {
-          "branch": "master",
-          "revision": "fb543b4b5ae8cb0ba92caace3841089770c83f3a",
-          "version": null
+          "branch": null,
+          "revision": "a8748d2b0657e3d5082f939fd4da13e3198e3d5f",
+          "version": "0.0.2"
         }
       }
     ]
